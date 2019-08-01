@@ -17,8 +17,8 @@ parser = argparse.ArgumentParser(description='Sequence Modeling - Word-level Lan
 
 parser.add_argument('--batch_size', type=int, default=16, metavar='N',
                     help='batch size (default: 16)')
-parser.add_argument('--cuda', action='store_false',
-                    help='use CUDA (default: True)')
+# parser.add_argument('--cuda', action='store_false',
+#                     help='use CUDA (default: True)')
 parser.add_argument('--dropout', type=float, default=0.45,
                     help='dropout applied to layers (default: 0.45)')
 parser.add_argument('--emb_dropout', type=float, default=0.25,
@@ -78,8 +78,8 @@ emb_dropout = args.emb_dropout
 tied = args.tied
 model = TCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied)
 
-if args.cuda:
-    model.cuda()
+# if args.cuda:
+#     model.cuda()
 
 # May use adaptive softmax to speed up training
 criterion = nn.CrossEntropyLoss()
