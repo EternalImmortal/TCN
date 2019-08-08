@@ -67,7 +67,7 @@ class TemporalConvNet(nn.Module):
     def __init__(self, num_inputs, num_channels, kernel_size=2, dropout=0.2):
         super(TemporalConvNet, self).__init__()
         layers = []
-        # num_channels为各层卷积运算的输出通道数或卷积核数量
+        # num_channels为各层卷积运算的输出通道≠数或卷积核数量
         # num_channels的长度即需要执行的卷积层数量
         # 扩张系数若能随着网络层级的增加而成指数增加，
         # 则可以增大感受野并不丢弃任何输入序列的元素

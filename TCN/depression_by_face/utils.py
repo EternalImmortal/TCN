@@ -54,15 +54,15 @@ print(files)
 file_train = files[:8000]
 file_test = files[8000:]
 
-np.save('file_train.npy', file_train)
-np.save('file_test.npy', file_test)
+# np.save('file_train.npy', file_train)
+# np.save('file_test.npy', file_test)
 
 labels = Series.as_matrix(label2D_originFIle['depression_level'])
 print(labels.shape)
 label_train = labels[:8000]
 label_test = labels[8000:]
-np.save('label_train.npy', label_train)
-np.save('label_test.npy', label_test)
+# np.save('label_train.npy', label_train)
+# np.save('label_test.npy', label_test)
 
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
@@ -82,7 +82,7 @@ class trainset(Dataset):
 
     def __getitem__(self, index):
         path = self.input[index]
-        inputTensor = self.loader()
+        inputTensor = self.loader(path)
         target = self.target[index]
         return inputTensor, target
 
@@ -98,7 +98,7 @@ class testset(Dataset):
 
     def __getitem__(self, index):
         path = self.input[index]
-        inputTensor = self.loader()
+        inputTensor = self.loader(path)
         target = self.target[index]
         return inputTensor, target
 
