@@ -90,7 +90,6 @@ MAX_FRAME = 300
 def default_loader(path):
     data = pd.read_csv(path, header=None)
     pure_data = data.iloc[:, 4:]
-
     np_data = np.array(pure_data.values)
 
     if np_data.shape[0] < 300:
