@@ -50,7 +50,6 @@ length = len(files)
 while (i < length):
     files[i] = os.path.join(dir, files[i])
     i += 1
-print(files)
 file_train = files[:8000]
 file_test = files[8000:]
 
@@ -67,21 +66,53 @@ label_test = labels[8000:]
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 
+MAX_FRAME = 300
+
+
+# def default_loader(path):
+#     data = pd.read_csv(path, header=None)
+#     pure_data = data.iloc[:, 4:]
+#     data_length = pure_data.shape[0]
+#     blank_row = np.zeros(136)
+#     blank_dataframe_row = pd.DataFrame(blank_row)
+#     # print("当前的视频帧数为" + str(data_length))
+#     while data_length < 300:
+#         # pure_data.append(blank_dataframe_row)
+#         pure_data.loc[data_length] = blank_row
+#         data_length += 1
+#     if data_length > 300:
+#         pure_data = pure_data.iloc[:300, :]
+#     # print(pure_data.shape)
+#     # print(pure_data)
+#     return torch.tensor(pure_data.values)
+
 
 def default_loader(path):
-    data = pd.read_csv(path)
+    data = pd.read_csv(path, header=None)
     pure_data = data.iloc[:, 4:]
-    return torch.tensor(pure_data)
 
+    np_data = np.array(pure_data.values)
+
+    if np_data.shape[0] < 300:
+        redundant_data = np.zeros([300 - np_data.shape[0], 136])
+        np_data = np.vstack((np_data, redundant_data))
+
+    if np_data.shape[0] > 300:
+        np_data = np_data[:300]
+    print(np_data.shape)
+
+    return torch.tensor(np_data)
 
 class trainset(Dataset):
     def __init__(self, loader=default_loader):
         self.input = file_train
+        # print(file_train)
         self.target = label_train
         self.loader = loader
 
     def __getitem__(self, index):
         path = self.input[index]
+        # print(str(index) + path)
         inputTensor = self.loader(path)
         target = self.target[index]
         return inputTensor, target

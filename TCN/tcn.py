@@ -57,7 +57,8 @@ class TemporalBlock(nn.Module):
             self.downsample.weight.data.normal_(0, 0.01)
 
     def forward(self, x):
-        out = self.net(x)
+        self.net = self.net.double()
+        out = self.net(x.double())
         # 残差模块
         res = x if self.downsample is None else self.downsample(x)
         return self.relu(out + res)

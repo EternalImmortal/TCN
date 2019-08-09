@@ -11,7 +11,7 @@ sys.path.append("../../")
 
 import numpy as np
 from TCN.depression_by_face.model import TCN
-from TCN.depression_by_face.utils import trainset,testset
+from TCN.depression_by_face.utils import trainset, testset
 
 parser = argparse.ArgumentParser(description='Sequence Modeling - depression by face')
 parser.add_argument('--batch_size', type=int, default=64, metavar='N',
@@ -42,7 +42,6 @@ parser.add_argument('--permute', action='store_true',
                     help='use permuted MNIST (default: false)')
 args = parser.parse_args()
 
-
 # Set the random seed manually for reproducibility.
 torch.manual_seed(args.seed)
 if torch.cuda.is_available():
@@ -72,7 +71,7 @@ model = TCN(input_channels, n_classes, channel_sizes, kernel_size=kernel_size, d
 
 # if args.cuda:
 #     model.cuda()
-    # permute = permute.cuda()
+# permute = permute.cuda()
 
 lr = args.lr
 optimizer = getattr(optim, args.optim)(model.parameters(), lr=lr)
@@ -84,7 +83,7 @@ def train(ep):
     train_loss = 0
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        if args.cuda: data, target = data.cuda(), target.cuda()
+        # if args.cuda: data, target = data.cuda(), target.cuda()
         # data = data.view(-1, input_channels, seq_length)
         # if args.permute:
         #     data = data[:, :, permute]
@@ -130,7 +129,7 @@ def checkresult():
 
 
 if __name__ == "__main__":
-    for epoch in range(1, epochs+1):
+    for epoch in range(1, epochs + 1):
         train(epoch)
         checkresult()
         if epoch % 10 == 0:
