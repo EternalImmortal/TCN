@@ -12,8 +12,8 @@ import argparse
 parser = argparse.ArgumentParser(description='Sequence Modeling - (Permuted) Sequential MNIST')
 parser.add_argument('--batch_size', type=int, default=64, metavar='N',
                     help='batch size (default: 64)')
-parser.add_argument('--cuda', action='store_false',
-                    help='use CUDA (default: True)')
+# parser.add_argument('--cuda', action='store_false',
+#                     help='use CUDA (default: True)')
 parser.add_argument('--dropout', type=float, default=0.05,
                     help='dropout applied to layers (default: 0.05)')
 parser.add_argument('--clip', type=float, default=-1,
@@ -39,9 +39,9 @@ parser.add_argument('--permute', action='store_true',
 args = parser.parse_args()
 
 torch.manual_seed(args.seed)
-if torch.cuda.is_available():
-    if not args.cuda:
-        print("WARNING: You have a CUDA device, so you should probably run with --cuda")
+# if torch.cuda.is_available():
+#     if not args.cuda:
+#         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
 
 root = './data/mnist'
 batch_size = args.batch_size
@@ -59,9 +59,9 @@ channel_sizes = [args.nhid] * args.levels
 kernel_size = args.ksize
 model = TCN(input_channels, n_classes, channel_sizes, kernel_size=kernel_size, dropout=args.dropout)
 
-if args.cuda:
-    model.cuda()
-    permute = permute.cuda()
+# if args.cuda:
+#     model.cuda()
+#     permute = permute.cuda()
 
 lr = args.lr
 optimizer = getattr(optim, args.optim)(model.parameters(), lr=lr)
@@ -72,13 +72,15 @@ def train(ep):
     train_loss = 0
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        if args.cuda: data, target = data.cuda(), target.cuda()
+        # if args.cuda: data, target = data.cuda(), target.cuda()
         data = data.view(-1, input_channels, seq_length)
         if args.permute:
             data = data[:, :, permute]
         data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
         output = model(data)
+        print(output.size())
+        print(target.size())
         loss = F.nll_loss(output, target)
         loss.backward()
         if args.clip > 0:
@@ -101,8 +103,8 @@ def checkresult():
         for data, target in test_loader:
             print(data)
             print(target)
-            if args.cuda:
-                data, target = data.cuda(), target.cuda()
+            # if args.cuda:
+            #     data, target = data.cuda(), target.cuda()
             data = data.view(-1, input_channels, seq_length)
             if args.permute:
                 data = data[:, :, permute]
